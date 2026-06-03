@@ -1,0 +1,348 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A Little Letter for Jenica</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Georgia, "Times New Roman", serif;
+      background:
+        radial-gradient(circle at top left, #f8eaff 0%, transparent 34%),
+        radial-gradient(circle at bottom right, #e5d4ff 0%, transparent 36%),
+        linear-gradient(135deg, #f5eaff, #eadcff, #faf3ff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #4b2c5e;
+      padding: 24px;
+      overflow-x: hidden;
+    }
+
+    .sparkle {
+      position: fixed;
+      width: 8px;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 50%;
+      box-shadow: 0 0 18px rgba(255, 255, 255, 0.9);
+      animation: float 7s infinite ease-in-out;
+      pointer-events: none;
+    }
+
+    .sparkle:nth-child(1) { top: 12%; left: 16%; animation-delay: 0s; }
+    .sparkle:nth-child(2) { top: 26%; right: 18%; animation-delay: 1.2s; }
+    .sparkle:nth-child(3) { bottom: 18%; left: 22%; animation-delay: 2.1s; }
+    .sparkle:nth-child(4) { bottom: 28%; right: 12%; animation-delay: 3s; }
+    .sparkle:nth-child(5) { top: 58%; left: 8%; animation-delay: 4s; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) scale(1); opacity: 0.55; }
+      50% { transform: translateY(-22px) scale(1.35); opacity: 1; }
+    }
+
+    .container {
+      width: min(94vw, 540px);
+      text-align: center;
+      position: relative;
+      z-index: 5;
+    }
+
+    .title {
+      margin-bottom: 12px;
+      font-size: clamp(30px, 5vw, 44px);
+      color: #6f3c91;
+      text-shadow: 0 4px 18px rgba(111, 60, 145, 0.18);
+    }
+
+    .hint {
+      margin-bottom: 10px;
+      font-size: 16px;
+      color: #78508d;
+    }
+
+    .stage {
+      position: relative;
+      width: 100%;
+      height: 620px;
+      perspective: 1200px;
+      cursor: pointer;
+      margin: 0 auto 12px;
+    }
+
+    .letter {
+      position: absolute;
+      left: 50%;
+      bottom: 60px;
+      width: 410px;
+      max-width: 92%;
+      min-height: 365px;
+      padding: 26px 30px;
+      background: rgba(255, 252, 255, 0.98);
+      border: 2px solid rgba(202, 165, 235, 0.72);
+      border-radius: 22px;
+      text-align: left;
+      line-height: 1.48;
+      font-size: 15px;
+      color: #4d2f5c;
+      box-shadow: 0 18px 35px rgba(88, 43, 115, 0.18);
+      transform: translateX(-50%) translateY(235px) scale(0.96);
+      opacity: 0;
+      visibility: hidden;
+      transition:
+        transform 1s ease 0.45s,
+        opacity 0.45s ease 0.45s,
+        visibility 0s linear 0.45s,
+        z-index 0.2s ease 0.45s;
+      z-index: 2;
+    }
+
+    .letter p {
+      margin-bottom: 10px;
+    }
+
+    .letter strong {
+      color: #7a3caf;
+      font-size: 18px;
+    }
+
+    .envelope {
+      position: absolute;
+      left: 50%;
+      bottom: 30px;
+      width: 420px;
+      max-width: 100%;
+      height: 260px;
+      transform: translateX(-50%);
+      z-index: 6;
+    }
+
+    .back {
+      position: absolute;
+      inset: 0;
+      background: #cda7f5;
+      border-radius: 0 0 24px 24px;
+      box-shadow: 0 24px 48px rgba(97, 55, 125, 0.28);
+      z-index: 1;
+    }
+
+    .left-panel,
+    .right-panel,
+    .bottom-panel {
+      position: absolute;
+      inset: 0;
+      z-index: 8;
+    }
+
+    .left-panel {
+      background: #b98aec;
+      clip-path: polygon(0 0, 52% 52%, 0 100%);
+    }
+
+    .right-panel {
+      background: #b98aec;
+      clip-path: polygon(100% 0, 48% 52%, 100% 100%);
+    }
+
+    .bottom-panel {
+      background: #a974dd;
+      clip-path: polygon(0 100%, 50% 34%, 100% 100%);
+    }
+
+    .top-flap {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 180px;
+      background: #d8b8fb;
+      clip-path: polygon(0 0, 50% 100%, 100% 0);
+      transform-origin: top;
+      transform: rotateX(0deg);
+      transition: transform 0.9s ease, z-index 0.2s ease;
+      filter: drop-shadow(0 8px 10px rgba(90, 45, 115, 0.16));
+      z-index: 10;
+    }
+
+    .stage.open .top-flap {
+      transform: rotateX(180deg);
+      z-index: 1;
+    }
+
+    .stage.open .letter {
+      transform: translateX(-50%) translateY(-145px) scale(1);
+      opacity: 1;
+      visibility: visible;
+      transition:
+        transform 1s ease 0.45s,
+        opacity 0.35s ease 0.45s,
+        visibility 0s linear 0s,
+        z-index 0.2s ease 0.45s;
+      z-index: 12;
+    }
+
+    button {
+      border: none;
+      padding: 12px 24px;
+      border-radius: 999px;
+      background: #8d55c7;
+      color: white;
+      font-size: 15px;
+      letter-spacing: 0.3px;
+      cursor: pointer;
+      box-shadow: 0 10px 20px rgba(141, 85, 199, 0.28);
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      background: #7540ad;
+    }
+
+    .song-note {
+      margin-top: 14px;
+      font-size: 13px;
+      color: #7a5a8d;
+    }
+
+    audio {
+      display: none;
+    }
+
+    @media (max-width: 520px) {
+      body {
+        align-items: flex-start;
+        padding: 18px 14px;
+      }
+
+      .title {
+        margin-top: 4px;
+        margin-bottom: 10px;
+      }
+
+      .hint {
+        margin-bottom: 4px;
+      }
+
+      .stage {
+        height: 660px;
+      }
+
+      .letter {
+        width: 94%;
+        min-height: 420px;
+        padding: 22px 20px;
+        font-size: 13.7px;
+        line-height: 1.42;
+        bottom: 55px;
+        transform: translateX(-50%) translateY(260px) scale(0.96);
+      }
+
+      .letter p {
+        margin-bottom: 9px;
+      }
+
+      .stage.open .letter {
+        transform: translateX(-50%) translateY(-150px) scale(1);
+      }
+
+      .envelope {
+        height: 245px;
+        bottom: 32px;
+      }
+
+      .top-flap {
+        height: 170px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="sparkle"></div>
+  <div class="sparkle"></div>
+  <div class="sparkle"></div>
+  <div class="sparkle"></div>
+  <div class="sparkle"></div>
+
+  <main class="container">
+    <h1 class="title">A Little Letter</h1>
+    <p class="hint">Click the envelope to open it 💜</p>
+
+    <section class="stage" id="letterStage" aria-label="Openable letter">
+      <div class="letter">
+        <p><strong>Hi Jenica,</strong></p>
+
+        <p>I know the universe has been throwing some annoying bad luck your way lately, so I just wanted to send a little reminder of how good you are.</p>
+
+        <p>Bad luck never lasts forever, and I know things are going to turn around for you soon. Until then, keep your head up, your smile is way too bright to let a few rough days dim it.</p>
+
+        <p>Just know that I’m always here to support you, whatever it may be.</p>
+
+        <p>Thinking of you! 😊</p>
+      </div>
+
+      <div class="envelope">
+        <div class="back"></div>
+        <div class="top-flap"></div>
+        <div class="left-panel"></div>
+        <div class="right-panel"></div>
+        <div class="bottom-panel"></div>
+      </div>
+    </section>
+
+    <button id="toggleButton">Open Letter</button>
+
+
+    <audio id="letterSong" loop>
+      <source src="tu/you.mp3" type="audio/mpeg">
+    </audio>
+  </main>
+
+  <script>
+    const stage = document.getElementById("letterStage");
+    const button = document.getElementById("toggleButton");
+    const song = document.getElementById("letterSong");
+
+    function openLetter() {
+      stage.classList.add("open");
+      button.textContent = "Close Letter";
+
+      song.currentTime = 0;
+      song.play().catch(() => {
+        console.log("Audio will play once the browser allows it after user interaction.");
+      });
+    }
+
+    function closeLetter() {
+      stage.classList.remove("open");
+      button.textContent = "Open Letter";
+
+      song.pause();
+      song.currentTime = 0;
+    }
+
+    function toggleLetter(event) {
+      event.stopPropagation();
+
+      if (stage.classList.contains("open")) {
+        closeLetter();
+      } else {
+        openLetter();
+      }
+    }
+
+    stage.addEventListener("click", toggleLetter);
+    button.addEventListener("click", toggleLetter);
+  </script>
+</body>
+</html>
+
+
